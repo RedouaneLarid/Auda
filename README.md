@@ -16,6 +16,8 @@ in the ui directory ("cd ui"):
 
 ### `npm run build`
 
+currently Auda only reads audio files from the audio folder in the root directory, we will later improve it so that you can select manualy the directory.
+
 
 **Note: The app is still under development, honestly just playing with Electron, I will probably ditch it soon if it gets boring**
 
