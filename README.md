@@ -21,5 +21,5 @@ currently Auda only reads audio files from the audio folder in the root director
 
 **Note: The app is still under development, honestly just playing with Electron, I will probably ditch it soon if it gets boring**
 
-### MUSIC IS HARAM (not being sarcastic).
+### MUSIC IS HARAM, please dont use it for that.
 
