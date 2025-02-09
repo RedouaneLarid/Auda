@@ -18,11 +18,13 @@ import AudioProgress from "./AudioProgress";
 
 
 const Player = () => {
+    const player = useRef(undefined);
+    const [filesArray , setFilesArray] = useState([]);
     const [currentAudio, setCurrentAudio] = useState("");
     const [play, setPlay] = useState(false);
-    const player = useRef(undefined);
     const [audioName, setAudioName] = useState("");
     const [volumeValue, setVolumeValue] = useState(50);
+    const [repeatAudio, setRepeatAudio] = useState(false);
 
     const handleToggle = (_event, data) => {
         setCurrentAudio(data);
@@ -31,8 +33,12 @@ const Player = () => {
         }, 1);
     }
 
+
     useEffect(() => {
         player.current = new Audio();
+        window.electron.getFilesArray((_event , data)=>{
+            setFilesArray(data);
+        });
         window.electron.onToggle(handleToggle);
     }, []);
 
@@ -43,8 +49,26 @@ const Player = () => {
     }, [currentAudio]);
 
     useEffect(() => {
+        const handleAudioEnd = () => {
+            setPlay(false);
+            if (repeatAudio) {
+                setTimeout(() => {
+                    setPlay(true);
+                }, 1000);
+            }
+            else {
+                const currentIndex = filesArray.indexOf(currentAudio);
+                setCurrentAudio(filesArray[(currentIndex+1)%filesArray.length]);
+                setTimeout(() => {
+                    setPlay(true);
+                }, 1000);
+            }
+            player.current.removeEventListener("ended", handleAudioEnd);
+        };
+
         if (play) {
             player.current.play();
+            player.current.addEventListener("ended", handleAudioEnd);
         }
         else {
             player.current.pause();
@@ -67,13 +91,17 @@ const Player = () => {
             </div>
             <div className="play-bar">
                 <div className="buttons-left">
-                    <img src={fastRewind} alt="" />
+                    <img onClick={() => {
+                        player.current.currentTime -= 10;
+                    }} src={fastRewind} alt="" />
                     <img src={previous} alt="" />
                     <img onClick={() => {
                         setPlay(prev => !prev);
                     }} className="play-button" src={play ? playIcon : pauseIcon} alt="" />
                     <img src={next} alt="" />
-                    <img src={fastForward} alt="" />
+                    <img onClick={() => {
+                        player.current.currentTime += 10;
+                    }} src={fastForward} alt="" />
                 </div>
             </div>
             <AudioProgress player={player} play={play} setPlay={setPlay} />
@@ -85,7 +113,9 @@ const Player = () => {
             </div>
             <div className="control-buttons">
                 <img src={shuffle} alt="" />
-                <img src={repeat} alt="" />
+                <img onClick={(e) => {
+                    setRepeatAudio(prev => !prev);
+                }} src={repeatAudio ? repeatOne : repeat} alt="" />
                 <img src={favorite} alt="" />
                 <img src={share} alt="" />
             </div>

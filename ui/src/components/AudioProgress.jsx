@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const AudioProgress = ({ player, play , setPlay}) => {
+const AudioProgress = ({ player, play, setPlay }) => {
     const [timestamp, setTimestamp] = useState([0, 0]);
     const [duration, setDuration] = useState([0, 0]);
     const [progress, setProgress] = useState(0);
@@ -11,7 +11,7 @@ const AudioProgress = ({ player, play , setPlay}) => {
             if (play) {
                 setDuration(player.current ? [Math.floor(player.current.duration / 60), Math.floor(player.current.duration % 60)] : [0, 0]);
                 setTimestamp(player.current.currentTime < player.current.duration ? [Math.floor(player.current.currentTime / 60), Math.floor(player.current.currentTime % 60)] : [0, 0]);
-                if(player.current.duration > 0 && player.current.currentTime > 0){
+                if (player.current.duration > 0 && player.current.currentTime > 0) {
                     const progressPercentage = player.current.currentTime < player.current.duration ? Math.floor(player.current.currentTime) * 100 / Math.floor(player.current.duration) : 0;
                     audioProgress.style.background = `linear-gradient(to right, orchid ${progressPercentage}%, white ${progressPercentage}%)`;
                 }

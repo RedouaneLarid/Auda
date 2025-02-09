@@ -110,6 +110,10 @@ main.home .sidebar-left {
   background-color: var(--color-theme-main);
 }
 
+.volume-container input:focus {
+  outline: none;
+}
+
 
 .sidebar-left .title-break {
   width: 100%;
@@ -222,6 +226,7 @@ main.home .lowerbar {
   width: 300px;
 }
 
+
 .progress-bar input {
   -webkit-appearance: none;
   appearance: none;
@@ -236,6 +241,10 @@ main.home .lowerbar {
   height: 14px;
   border-radius: 50%;
   background-color: var(--color-theme-main);
+}
+
+.progress-bar input:focus {
+  outline: none;
 }
 
 .progress-bar .timestamps {

@@ -14,7 +14,12 @@ contextBridge.exposeInMainWorld("electron", {
             })
         });
     },
+
     onToggle: (callback)=>{
         ipcRenderer.on("toggle-audio" , (_event , data) => callback(_event , data));
     },
+
+    getFilesArray: (callback) =>{
+        ipcRenderer.on("audio-files-array" , (_event , data) => callback(_event , data));
+    }
 });

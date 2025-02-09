@@ -3,6 +3,11 @@ const path = require("path");
 const fs = require("fs");
 
 
+
+const directory = path.join(__dirname, "audio");
+const files = fs.readdirSync(directory);
+const filesArray = files.filter((file) => file.endsWith(".mp3") || file.endsWith(".flac") || file.endsWith(".wav")).map((file) => path.join(directory, file));
+
 const createWindow = () => {
     const win = new BrowserWindow({
         width: 1400,
@@ -13,11 +18,13 @@ const createWindow = () => {
     });
 
     win.removeMenu();
-    //win.webContents.openDevTools();
+    win.setIcon("./logo.png");
+    win.webContents.openDevTools();
     win.loadFile(path.join(__dirname, "ui/build/index.html"));
     //win.loadURL("http://localhost:3000");
     win.webContents.once('did-finish-load', () => {
         win.webContents.setZoomFactor(0.9); // 
+        win.webContents.send("audio-files-array", filesArray);
     });
 
     ipcMain.on("toggle-playing-audio", (_event, data) => {
@@ -29,9 +36,7 @@ app.on("ready", () => {
     createWindow();
 
     ipcMain.handle("get-audio-files", async () => {
-        const directory = path.join(__dirname, "audio");
-        const files = fs.readdirSync(directory);
-        return files.filter((file) => file.endsWith(".mp3")).map((file) => path.join(directory, file));
+        return filesArray;
     });
 
     app.on('activate', () => {
