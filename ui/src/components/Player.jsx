@@ -19,7 +19,7 @@ import AudioProgress from "./AudioProgress";
 
 const Player = () => {
     const player = useRef(undefined);
-    const [filesArray , setFilesArray] = useState([]);
+    const [filesArray, setFilesArray] = useState([]);
     const [currentAudio, setCurrentAudio] = useState("");
     const [play, setPlay] = useState(false);
     const [audioName, setAudioName] = useState("");
@@ -36,7 +36,7 @@ const Player = () => {
 
     useEffect(() => {
         player.current = new Audio();
-        window.electron.getFilesArray((_event , data)=>{
+        window.electron.getFilesArray((_event, data) => {
             setFilesArray(data);
         });
         window.electron.onToggle(handleToggle);
@@ -58,7 +58,7 @@ const Player = () => {
             }
             else {
                 const currentIndex = filesArray.indexOf(currentAudio);
-                setCurrentAudio(filesArray[(currentIndex+1)%filesArray.length]);
+                setCurrentAudio(filesArray[(currentIndex + 1) % filesArray.length]);
                 setTimeout(() => {
                     setPlay(true);
                 }, 1000);
@@ -94,11 +94,23 @@ const Player = () => {
                     <img onClick={() => {
                         player.current.currentTime -= 10;
                     }} src={fastRewind} alt="" />
-                    <img src={previous} alt="" />
+                    <img onClick={() => {
+                        setCurrentAudio(filesArray[filesArray.indexOf(currentAudio) > 0 ? filesArray.indexOf(currentAudio) - 1 : filesArray.length - 1]);
+                        player.current.currentTime = 0;
+                        setTimeout(() => {
+                            setPlay(true);
+                        }, 300);
+                    }} src={previous} alt="" />
                     <img onClick={() => {
                         setPlay(prev => !prev);
                     }} className="play-button" src={play ? playIcon : pauseIcon} alt="" />
-                    <img src={next} alt="" />
+                    <img onClick={() => {
+                        setCurrentAudio(filesArray[(filesArray.indexOf(currentAudio) + 1) % filesArray.length]);
+                        player.current.currentTime = 0;
+                        setTimeout(() => {
+                            setPlay(true);
+                        }, 300);
+                    }} src={next} alt="" />
                     <img onClick={() => {
                         player.current.currentTime += 10;
                     }} src={fastForward} alt="" />
